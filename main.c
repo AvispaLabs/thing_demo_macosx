@@ -3,7 +3,7 @@
 #include <string.h>
 #include "kii_sources/kii_cloud.h"
 
-void get_cpu_temp(char* out_temp)
+void get_cpu_temp(char* out_temp, size_t buff_len)
 {
     char *ptr = NULL;
     FILE *fp = NULL;
@@ -12,16 +12,13 @@ void get_cpu_temp(char* out_temp)
         fprintf(stderr, "failed to execute command.\n");
         exit(-1);
     }
-    while(1) {
-        fgets(out_temp, 512, fp);
-        if (feof(fp)) {
-            break;
-        }
-        ptr = strstr(out_temp, "°C");
-        if (ptr != NULL) {
-            *ptr = '\0';
-        }
+
+    fgets(out_temp, buff_len, fp);
+    ptr = strstr(out_temp, "°C");
+    if (ptr != NULL) {
+        *ptr = '\0';
     }
+
     pclose(fp);
 }
 
@@ -29,7 +26,7 @@ const char* g_app_id = "616962c4";
 const char* g_app_key = "fd02f617b070ec1ae9819935e3943bd6";
 const char* g_base_url = "https://api-jp.kii.com/api";
 
-const char* g_vendor_thing_id = "thing-demo-2";
+const char* g_vendor_thing_id = "thing-demo-3";
 const char* g_thing_password = "S0xAUJqr";
 
 kii_app_t g_app = NULL;
@@ -93,17 +90,14 @@ int load_thing() {
     if (fp1 == NULL) {
         return 0;
     }
-    while(1) {
-        fgets(thingStr, 256, fp1);
-        if (feof(fp1)) {
-            break;
-        }
-        temp = strchr(thingStr, '\n');
-        if (temp != NULL) {
-            *temp = '\0';
-        }
+
+    fgets(thingStr, 256, fp1);
+    temp = strchr(thingStr, '\n');
+    if (temp != NULL) {
+        *temp = '\0';
     }
     fclose(fp1);
+
     printf("thingStr: %s", thingStr);
     g_thing = kii_thing_deserialize(thingStr);
     return 1;
@@ -117,17 +111,14 @@ int load_token() {
     if (fp1 == NULL) {
         return 0;
     }
-    while(1) {
-        fgets(tokenStr, 256, fp1);
-        if (feof(fp1)) {
-            break;
-        }
-        temp = strchr(tokenStr, '\n');
-        if (temp != NULL) {
-            *temp = '\0';
-        }
+
+    fgets(tokenStr, 256, fp1);
+    temp = strchr(tokenStr, '\n');
+    if (temp != NULL) {
+        *temp = '\0';
     }
     fclose(fp1);
+
     printf("tokenStr: %s", tokenStr);
     g_token = strdup(tokenStr);
     return 1;
@@ -147,8 +138,8 @@ int main()
     load_token();
 
     /* Record CPU temperture */
-    char str[512];
-    get_cpu_temp(str);
+    char str[128];
+    get_cpu_temp(str, 128);
     printf("%s\n", str);
     double dtemp = atof(str);
 
