@@ -32,7 +32,6 @@ const char* baseUrl = "https://api-jp.kii.com/api";
 const char* vendorThingId = "thing-demo-2";
 const char* thingPassword = "S0xAUJqr";
 
-int retistered = 0;
 kii_app_t app = NULL;
 kii_thing_t thing = NULL;
 kii_char_t* token = NULL;
