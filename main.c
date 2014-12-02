@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "kii_sources/kii_cloud.h"
 
 void get_cpu_temp(char* out_temp, size_t buff_len)
@@ -26,7 +27,7 @@ const char* g_app_id = "616962c4";
 const char* g_app_key = "fd02f617b070ec1ae9819935e3943bd6";
 const char* g_base_url = "https://api-jp.kii.com/api";
 
-const char* g_vendor_thing_id = "thing-demo-3";
+char g_vendor_thing_id[128];
 const char* g_thing_password = "S0xAUJqr";
 
 kii_app_t g_app = NULL;
@@ -34,7 +35,10 @@ kii_thing_t g_thing = NULL;
 kii_char_t* g_token = NULL;
 
 void register_thing() {
-
+    pid_t pid = getpid();
+    g_vendor_thing_id[0] = '\0';
+    snprintf(g_vendor_thing_id, 128, "thingid_%d", pid);
+    printf("thing id: %s\n", g_vendor_thing_id);
     kii_error_code_t ret = kii_register_thing(g_app,
             g_vendor_thing_id,
             g_thing_password,
@@ -51,12 +55,12 @@ void register_thing() {
     /* store thing */
     kii_char_t* sThing = kii_thing_serialize(g_thing);
     char command[256];
-    sprintf(command, "echo %s > thing.dat", sThing);
+    snprintf(command, 256, "echo %s > thing.dat", sThing);
     system(command);
 
     /* store token */
     char command2[256];
-    sprintf(command2, "echo %s > token.dat", g_token);
+    snprintf(command2, 256, "echo %s > token.dat", g_token);
     system(command2);
 }
 
@@ -98,7 +102,7 @@ int load_thing() {
     }
     fclose(fp1);
 
-    printf("thingStr: %s", thingStr);
+    printf("loaded : %s\n", thingStr);
     g_thing = kii_thing_deserialize(thingStr);
     return 1;
 }
@@ -119,7 +123,6 @@ int load_token() {
     }
     fclose(fp1);
 
-    printf("tokenStr: %s", tokenStr);
     g_token = strdup(tokenStr);
     return 1;
 }
@@ -140,7 +143,7 @@ int main()
     /* Record CPU temperture */
     char str[128];
     get_cpu_temp(str, 128);
-    printf("%s\n", str);
+    printf("temperture: %s°C\n", str);
     double dtemp = atof(str);
 
     save_temperture(dtemp);
