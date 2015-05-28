@@ -43,3 +43,9 @@ Choose your application and browse objects by object browser.
 
 http://docs.kii.com/en/guides/devportal/data_browsing/data-browser/
 
+#### Discard stored device
+On first time program execution,
+It registers new thing it store information in thing.dat and token.dat files
+After that the program uses same thing and do not register new thing.
+If you want to register new thing, delete thing.dat and token.dat file.
+
