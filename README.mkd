@@ -1,0 +1,45 @@
+### Kii IoT quick demo on Mac OSX.
+Upload your Mac CPU temperture in Kii Cloud.
+
+### Dependency 
+ - libcurl
+ http://curl.haxx.se/libcurl/
+
+ - libjansson
+ http://www.digip.org/jansson/
+
+ - osx-cpu-temp
+ You need to install this software in your Mac.
+ https://github.com/lavoiesl/osx-cpu-temp
+
+### Usage
+#### Replace app-id/ app-key/ url in main.c with yours.
+
+```c
+/* Replace them */
+const char* g_app_id = "616962c4";
+const char* g_app_key = "fd02f617b070ec1ae9819935e3943bd6";
+const char* g_base_url = "https://api-jp.kii.com/api";
+```
+url:
+ - JP: "https://api-jp.kii.com/api"
+ - US: "https://api.kii.com/api"
+ - CN: "https://api-cn2.kii.com/api"
+ - SG: "https://api-sg.kii.com/api"
+
+#### Execute program
+
+```sh
+make
+./thingdemo
+```
+#### Check result
+Thing id is stored in thing.dat
+```sh
+cat thing.dat 
+```
+Go to developer.kii.com with your browser.
+Choose your application and browse objects by object browser.
+
+http://docs.kii.com/en/guides/devportal/data_browsing/data-browser/
+
