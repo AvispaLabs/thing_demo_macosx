@@ -23,12 +23,13 @@ void get_cpu_temp(char* out_temp, size_t buff_len)
     pclose(fp);
 }
 
-const char* g_app_id = "616962c4";
-const char* g_app_key = "fd02f617b070ec1ae9819935e3943bd6";
-const char* g_base_url = "https://api-jp.kii.com/api";
+const char* g_app_id = "842e00d8";
+const char* g_app_key = "851995d3247d81d5fd771b8752adddb1";
+const char* g_base_url = "https://api.kii.com/api";
 
 char g_vendor_thing_id[128];
 const char* g_thing_password = "S0xAUJqr";
+const char* g_thing_bucket = "tempertures";
 
 kii_app_t g_app = NULL;
 kii_thing_t g_thing = NULL;
@@ -62,13 +63,18 @@ void register_thing() {
     char command2[256];
     snprintf(command2, 256, "echo %s > token.dat", g_token);
     system(command2);
+
+    /* store QR */
+    char command3[256];
+    snprintf(command3, 256, "qrencode -o qr.png `echo %s,%s`", sThing, g_token);
+    system(command3);
 }
 
 void save_temperture(double temperture) {
     json_t* contents = json_object();
     json_object_set_new(contents, "cpu-temp", json_real(temperture));
 
-    kii_bucket_t tempBucket = kii_init_thing_bucket(g_thing, "tempertures");
+    kii_bucket_t tempBucket = kii_init_thing_bucket(g_thing, g_thing_bucket);
     kii_error_code_t ret = kii_create_new_object(g_app,
             g_token,
             tempBucket,
@@ -143,7 +149,7 @@ int main()
     /* Record CPU temperture */
     char str[128];
     get_cpu_temp(str, 128);
-    printf("temperture: %s°C\n", str);
+    printf("temperature: %s°C\n", str);
     double dtemp = atof(str);
 
     save_temperture(dtemp);

@@ -10,7 +10,8 @@
 
 #include <stdio.h>
 
-#include "curl.h"
+//#include "curl.h"
+#include <curl/curl.h>
 #include "kii_custom.h"
 
 #ifdef __cplusplus

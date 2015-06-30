@@ -3,15 +3,18 @@ Upload your Mac CPU temperture in Kii Cloud.
 
 ### Dependency 
  - libcurl
- http://curl.haxx.se/libcurl/
+ Already present on OSX
 
  - libjansson
- http://www.digip.org/jansson/
+ Install with "brew install jansson"
 
  - osx-cpu-temp
  You need to install this software in your Mac.
  https://github.com/lavoiesl/osx-cpu-temp
 
+ - qrencode
+ Install with "brew install qrencode"
+ 
 ### Usage
 #### Replace app-id/ app-key/ url in main.c with yours.
 
